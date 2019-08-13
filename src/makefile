@@ -18,7 +18,7 @@ PLAT?=linux
 
 # LUAV: 5.1 5.2
 # lua version to build against
-LUAV?=5.1
+LUAV?=5.2
 
 # MYCFLAGS: to be set by user if needed
 MYCFLAGS?=
@@ -73,6 +73,19 @@ LUALIB_mingw?=$(LUALIB_mingw_base)/lua/$(LUAV)/lua$(subst .,,$(LUAV)).dll
 LUAPREFIX_mingw?=/usr
 CDIR_mingw?=lua/$(LUAV)
 LDIR_mingw?=lua/$(LUAV)/lua
+
+# where lua headers are found for mingw builds
+# LUAINC_mingw:
+# /opt/local/include
+LUAINC_mingw32_base?=/c/usr/local/include
+LUAINC_mingw32?=$(LUAINC_mingw32_base)/lua/$(LUAV) $(LUAINC_mingw32_base)/lua$(LUAV)
+LUALIB_mingw32_base?=/c/usr/local/bin
+#leu: no subdirs in /c/usr/local/bin in my installation for mingw32/64
+#LUALIB_mingw32?=$(LUALIB_mingw32_base)/lua/$(LUAV)/lua$(subst .,,$(LUAV)).dll
+LUALIB_mingw32?=$(LUALIB_mingw32_base)/lua$(subst .,,$(LUAV)).dll
+LUAPREFIX_mingw32?=/c/usr/local
+CDIR_mingw32?=lib/lua/$(LUAV)
+LDIR_mingw32?=share/lua/$(LUAV)
 
 
 # LUAINC_win32:
@@ -153,7 +166,7 @@ print:
 #------
 # Supported platforms
 #
-PLATS= macosx linux win32 win64 mingw solaris
+PLATS= macosx linux win32 win64 mingw solaris mingw32
 
 #------
 # Compiler and linker settings
@@ -218,6 +231,21 @@ CFLAGS_mingw=$(LUAINC:%=-I%) $(DEF) -Wall -O2 -fno-common
 LDFLAGS_mingw= $(LUALIB) -shared -Wl,-s -lws2_32 -o 
 LD_mingw=gcc
 SOCKET_mingw=wsocket.o
+
+#------
+# Compiler and linker settings
+# for MingW32
+SO_mingw32=dll
+O_mingw32=o
+CC_mingw32=gcc
+DEF_mingw32= -DLUASOCKET_$(DEBUG) \
+	-DWINVER=0x0A00 -DWIN32_WINNT=0x0A00
+#DEF_mingw32= -DLUASOCKET_INET_PTON -DLUASOCKET_$(DEBUG) \
+#	-DWINVER=0x0A00 -DWIN32_WINNT=0x0A00
+CFLAGS_mingw32=$(LUAINC:%=-I%) $(DEF) -mwin32 -Wall -O2 -fno-common
+LDFLAGS_mingw32= $(LUALIB) -shared -Wl,-s -lws2_32 -o 
+LD_mingw32=gcc
+SOCKET_mingw32=wsocket.o
 
 
 #------
@@ -383,6 +411,9 @@ linux:
 
 mingw:
 	$(MAKE) all PLAT=mingw
+
+mingw32:
+	$(MAKE) all PLAT=mingw32
 
 solaris:
 	$(MAKE) all-unix PLAT=solaris

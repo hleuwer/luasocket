@@ -78,7 +78,7 @@ LDIR_mingw?=lua/$(LUAV)/lua
 # LUAINC_mingw:
 # /opt/local/include
 LUAINC_mingw32_base?=/c/usr/local/include
-LUAINC_mingw32?=$(LUAINC_mingw32_base)/lua/$(LUAV) $(LUAINC_mingw32_base)/lua$(LUAV)
+LUAINC_mingw32?=$(LUAINC_mingw32_base)/lua/$(LUAV) $(LUAINC_mingw32_base)/lua$(LUAV) $(LUAINC_mingw32_base)
 LUALIB_mingw32_base?=/c/usr/local/bin
 #leu: no subdirs in /c/usr/local/bin in my installation for mingw32/64
 #LUALIB_mingw32?=$(LUALIB_mingw32_base)/lua/$(LUAV)/lua$(subst .,,$(LUAV)).dll
